@@ -77,68 +77,7 @@ This layer follows a **star schema** design:
 
 ---
 
-## Entity Relationship Overview
 
-```
-                  ┌───────────────────────┐
-                  │   gold.dim_customers   │
-                  │─────────────────────── │
-                  │ customer_key (PK)       │
-                  │ customer_id             │
-                  │ customer_number         │
-                  │ first_name              │
-                  │ last_name               │
-                  │ country                 │
-                  │ marital_status          │
-                  │ gender                  │
-                  │ birthdate               │
-                  │ create_date             │
-                  └───────────┬────────────┘
-                              │
-                              │ customer_key
-                              │
-                  ┌───────────▼────────────┐
-                  │     gold.fact_sales     │
-                  │─────────────────────── │
-                  │ order_number             │
-                  │ product_key (FK)         │
-                  │ customer_key (FK)        │
-                  │ order_date               │
-                  │ shipping_date            │
-                  │ due_date                 │
-                  │ sales_amount             │
-                  │ quantity                 │
-                  │ price                    │
-                  └───────────┬────────────┘
-                              │
-                              │ product_key
-                              │
-                  ┌───────────▼────────────┐
-                  │    gold.dim_products    │
-                  │─────────────────────── │
-                  │ product_key (PK)         │
-                  │ product_id               │
-                  │ product_number           │
-                  │ product_name             │
-                  │ category_id              │
-                  │ category                 │
-                  │ subcategory              │
-                  │ maintenance_required     │
-                  │ cost                     │
-                  │ product_line             │
-                  │ start_date               │
-                  └─────────────────────────┘
-```
-
----
-
-## Notes
-
-- All surrogate keys (`customer_key`, `product_key`) are generated within the Gold Layer and are used exclusively for joining fact and dimension tables.
-- Natural/business identifiers (`customer_id`, `customer_number`, `product_id`, `product_number`) are retained for traceability back to source systems.
-- This layer is optimized for **BI tools, dashboards, and ad-hoc analytical queries** (e.g., Power BI, Tableau, SQL-based reporting).
-
----
 
 ## License
 
