@@ -1,0 +1,782 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="7/22/2026 3:02:26 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="BS-00978"
+  DTS:CreatorName="BS-00978\BS00978"
+  DTS:DTSID="{2BB9E785-5C7B-4FAA-9978-5F2FC09EC335}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1016.0"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="Package1"
+  DTS:PackageType="5"
+  DTS:VersionBuild="3"
+  DTS:VersionGUID="{4E8BE591-4EF9-4F0B-8963-A647D7396376}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[BS-00978.DataWarehouse_Dev]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{D2A7BF57-03C3-4E3A-BB36-234772623DB1}"
+      DTS:ObjectName="BS-00978.DataWarehouse_Dev">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=BS-00978;Initial Catalog=DataWarehouse_Dev;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-Package1-{D2A7BF57-03C3-4E3A-BB36-234772623DB1}BS-00978.DataWarehouse_Dev;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Load Silver PrdInfo"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{77F9E3CE-4EAB-430A-B7BB-B57C1972C6DE}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load Silver PrdInfo"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Load Silver PrdInfo\bronze crm_prd_info"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="bronze crm_prd_info"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT
+    TRY_CAST(prd_id AS INT) AS prd_id,
+    REPLACE(SUBSTRING(prd_key, 1, 5), '-', '_') AS cat_id,
+    SUBSTRING(prd_key, 7, LEN(prd_key)) AS prd_key,
+    prd_nm,
+    ISNULL(TRY_CAST(prd_cost AS INT), 0) AS prd_cost,
+    prd_line,
+    TRY_CAST(prd_start_dt AS DATE) AS prd_start_dt,
+    CAST(
+        DATEADD(DAY, -1, LEAD(TRY_CAST(prd_start_dt AS DATE)) OVER (PARTITION BY prd_key ORDER BY TRY_CAST(prd_start_dt AS DATE)))
+        AS DATE
+    ) AS prd_end_dt
+FROM bronze.crm_prd_info
+WHERE prd_id IS NOT NULL AND ISNUMERIC(prd_id) = 1;</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[BS-00978.DataWarehouse_Dev]"
+                  connectionManagerRefId="Package.ConnectionManagers[BS-00978.DataWarehouse_Dev]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_id]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].ExternalColumns[prd_id]"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_id]"
+                      name="prd_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[cat_id]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].ExternalColumns[cat_id]"
+                      length="4000"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[cat_id]"
+                      name="cat_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_key]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].ExternalColumns[prd_key]"
+                      length="50"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_key]"
+                      name="prd_key"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_nm]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].ExternalColumns[prd_nm]"
+                      length="100"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_nm]"
+                      name="prd_nm"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_cost]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].ExternalColumns[prd_cost]"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_cost]"
+                      name="prd_cost"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_line]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].ExternalColumns[prd_line]"
+                      length="50"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_line]"
+                      name="prd_line"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_start_dt]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].ExternalColumns[prd_start_dt]"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_start_dt]"
+                      name="prd_start_dt"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_end_dt]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].ExternalColumns[prd_end_dt]"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_end_dt]"
+                      name="prd_end_dt"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].ExternalColumns[prd_id]"
+                      dataType="i4"
+                      name="prd_id" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].ExternalColumns[cat_id]"
+                      dataType="wstr"
+                      length="4000"
+                      name="cat_id" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].ExternalColumns[prd_key]"
+                      dataType="wstr"
+                      length="50"
+                      name="prd_key" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].ExternalColumns[prd_nm]"
+                      dataType="wstr"
+                      length="100"
+                      name="prd_nm" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].ExternalColumns[prd_cost]"
+                      dataType="i4"
+                      name="prd_cost" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].ExternalColumns[prd_line]"
+                      dataType="wstr"
+                      length="50"
+                      name="prd_line" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].ExternalColumns[prd_start_dt]"
+                      dataType="dbDate"
+                      name="prd_start_dt" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].ExternalColumns[prd_end_dt]"
+                      dataType="dbDate"
+                      name="prd_end_dt" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[prd_id]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[prd_id]"
+                      name="prd_id" />
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[cat_id]"
+                      dataType="wstr"
+                      length="4000"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[cat_id]"
+                      name="cat_id" />
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[prd_key]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[prd_key]"
+                      name="prd_key" />
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[prd_nm]"
+                      dataType="wstr"
+                      length="100"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[prd_nm]"
+                      name="prd_nm" />
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[prd_cost]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[prd_cost]"
+                      name="prd_cost" />
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[prd_line]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[prd_line]"
+                      name="prd_line" />
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[prd_start_dt]"
+                      dataType="dbDate"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[prd_start_dt]"
+                      name="prd_start_dt" />
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[prd_end_dt]"
+                      dataType="dbDate"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[prd_end_dt]"
+                      name="prd_end_dt" />
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Load Silver PrdInfo\Derive prd_line"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="Derive prd_line"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\Load Silver PrdInfo\Derive prd_line.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Load Silver PrdInfo\Derive prd_line.Inputs[Derived Column Input].Columns[prd_line]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="prd_line"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_line]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Load Silver PrdInfo\Derive prd_line.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\Load Silver PrdInfo\Derive prd_line.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\Derive prd_line.Outputs[Derived Column Output].Columns[prd_line_clean]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      length="11"
+                      lineageId="Package\Load Silver PrdInfo\Derive prd_line.Outputs[Derived Column Output].Columns[prd_line_clean]"
+                      name="prd_line_clean"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">[UPPER]([TRIM](#{Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_line]})) == "M" ? "Mountain" : ([UPPER]([TRIM](#{Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_line]})) == "R" ? "Road" : ([UPPER]([TRIM](#{Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_line]})) == "S" ? "Other Sales" : ([UPPER]([TRIM](#{Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_line]})) == "T" ? "Touring" : "n/a")))</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">UPPER(TRIM(prd_line)) == "M" ? "Mountain" : (UPPER(TRIM(prd_line)) == "R" ? "Road" : (UPPER(TRIM(prd_line)) == "S" ? "Other Sales" : (UPPER(TRIM(prd_line)) == "T" ? "Touring" : "n/a")))</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load Silver PrdInfo\Derive prd_line.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\Load Silver PrdInfo\Derive prd_line.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\Derive prd_line.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver PrdInfo\Derive prd_line.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\Derive prd_line.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver PrdInfo\Derive prd_line.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Destination - silver crm_prd_info"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[silver].[crm_prd_info]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[BS-00978.DataWarehouse_Dev]"
+                  connectionManagerRefId="Package.ConnectionManagers[BS-00978.DataWarehouse_Dev]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].Columns[prd_id]"
+                      cachedDataType="i4"
+                      cachedName="prd_id"
+                      externalMetadataColumnId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].ExternalColumns[prd_id]"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_id]" />
+                    <inputColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].Columns[cat_id]"
+                      cachedDataType="wstr"
+                      cachedLength="4000"
+                      cachedName="cat_id"
+                      externalMetadataColumnId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].ExternalColumns[cat_id]"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[cat_id]" />
+                    <inputColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].Columns[prd_key]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="prd_key"
+                      externalMetadataColumnId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].ExternalColumns[prd_key]"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_key]" />
+                    <inputColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].Columns[prd_nm]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="prd_nm"
+                      externalMetadataColumnId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].ExternalColumns[prd_nm]"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_nm]" />
+                    <inputColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].Columns[prd_cost]"
+                      cachedDataType="i4"
+                      cachedName="prd_cost"
+                      externalMetadataColumnId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].ExternalColumns[prd_cost]"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_cost]" />
+                    <inputColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].Columns[prd_start_dt]"
+                      cachedDataType="dbDate"
+                      cachedName="prd_start_dt"
+                      externalMetadataColumnId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].ExternalColumns[prd_start_dt]"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_start_dt]" />
+                    <inputColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].Columns[prd_end_dt]"
+                      cachedDataType="dbDate"
+                      cachedName="prd_end_dt"
+                      externalMetadataColumnId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].ExternalColumns[prd_end_dt]"
+                      lineageId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output].Columns[prd_end_dt]" />
+                    <inputColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].Columns[prd_line_clean]"
+                      cachedDataType="wstr"
+                      cachedLength="11"
+                      cachedName="prd_line_clean"
+                      externalMetadataColumnId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].ExternalColumns[prd_line]"
+                      lineageId="Package\Load Silver PrdInfo\Derive prd_line.Outputs[Derived Column Output].Columns[prd_line_clean]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].ExternalColumns[prd_id]"
+                      dataType="i4"
+                      name="prd_id" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].ExternalColumns[cat_id]"
+                      dataType="wstr"
+                      length="50"
+                      name="cat_id" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].ExternalColumns[prd_key]"
+                      dataType="wstr"
+                      length="50"
+                      name="prd_key" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].ExternalColumns[prd_nm]"
+                      dataType="wstr"
+                      length="50"
+                      name="prd_nm" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].ExternalColumns[prd_cost]"
+                      dataType="i4"
+                      name="prd_cost" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].ExternalColumns[prd_line]"
+                      dataType="wstr"
+                      length="50"
+                      name="prd_line" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].ExternalColumns[prd_start_dt]"
+                      dataType="dbDate"
+                      name="prd_start_dt" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].ExternalColumns[prd_end_dt]"
+                      dataType="dbDate"
+                      name="prd_end_dt" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input].ExternalColumns[dwh_create_date]"
+                      dataType="dbTimeStamp2"
+                      name="dwh_create_date"
+                      scale="7" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Load Silver PrdInfo.Paths[Derived Column Output]"
+              endId="Package\Load Silver PrdInfo\Destination - silver crm_prd_info.Inputs[OLE DB Destination Input]"
+              name="Derived Column Output"
+              startId="Package\Load Silver PrdInfo\Derive prd_line.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\Load Silver PrdInfo.Paths[OLE DB Source Output]"
+              endId="Package\Load Silver PrdInfo\Derive prd_line.Inputs[Derived Column Input]"
+              name="OLE DB Source Output"
+              startId="Package\Load Silver PrdInfo\bronze crm_prd_info.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Truncate silver_crm_prd_info"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{8DD4A71D-B3D6-4CC9-9BE6-A25856A93D9C}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Truncate silver_crm_prd_info"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{D2A7BF57-03C3-4E3A-BB36-234772623DB1}"
+          SQLTask:SqlStatementSource="TRUNCATE TABLE silver.crm_prd_info" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{0CF553CE-90FC-439A-B058-9A1B0044763E}"
+      DTS:From="Package\Truncate silver_crm_prd_info"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Load Silver PrdInfo" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="217.333333333334,42.6666666666667"
+          Id="Package\Truncate silver_crm_prd_info"
+          TopLeft="226.249989885837,46.5263152786239" />
+        <NodeLayout
+          Size="170.666666666667,42.6666666666667"
+          Id="Package\Load Silver PrdInfo"
+          TopLeft="258.124988460914,146.421051023905" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="334.916656552504,89.1929819452906">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="8.5416652417432,57.2280690786141"
+              Start="0,0"
+              End="8.5416652417432,49.7280690786141">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6140345393071" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6140345393071"
+                    Point2="0,28.6140345393071"
+                    Point3="4,28.6140345393071" />
+                  <mssgle:LineSegment
+                    End="4.5416652417432,28.6140345393071" />
+                  <mssgle:CubicBezierSegment
+                    Point1="4.5416652417432,28.6140345393071"
+                    Point2="8.5416652417432,28.6140345393071"
+                    Point3="8.5416652417432,32.6140345393071" />
+                  <mssgle:LineSegment
+                    End="8.5416652417432,49.7280690786141" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Load Silver PrdInfo">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="177.333333333334,42.6666666666667"
+          Id="Package\Load Silver PrdInfo\bronze crm_prd_info"
+          TopLeft="236.874989410863,27.3684207521317" />
+        <NodeLayout
+          Size="152,42.6666666666667"
+          Id="Package\Load Silver PrdInfo\Derive prd_line"
+          TopLeft="248.124988907948,109.473683008527" />
+        <EdgeLayout
+          Id="Package\Load Silver PrdInfo.Paths[OLE DB Source Output]"
+          TopLeft="324.833322492739,70.0350874187984">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.4385955897285"
+              Start="0,0"
+              End="0,31.9385955897285">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.9385955897285" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="232,42.6666666666667"
+          Id="Package\Load Silver PrdInfo\Destination - silver crm_prd_info"
+          TopLeft="224.374989969656,206.596489259796" />
+        <EdgeLayout
+          Id="Package\Load Silver PrdInfo.Paths[Derived Column Output]"
+          TopLeft="324.124988907948,152.140349675194">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="16.2500010617079,54.4561395846025"
+              Start="0,0"
+              End="16.2500010617079,46.9561395846025">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.2280697923013" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,23.2280697923013"
+                    Point2="0,27.2280697923013"
+                    Point3="4,27.2280697923013" />
+                  <mssgle:LineSegment
+                    End="12.2500010617079,27.2280697923013" />
+                  <mssgle:CubicBezierSegment
+                    Point1="12.2500010617079,27.2280697923013"
+                    Point2="16.2500010617079,27.2280697923013"
+                    Point3="16.2500010617079,31.2280697923013" />
+                  <mssgle:LineSegment
+                    End="16.2500010617079,46.9561395846025" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Silver PrdInfo\bronze crm_prd_info">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Silver PrdInfo\Destination - silver crm_prd_info">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
