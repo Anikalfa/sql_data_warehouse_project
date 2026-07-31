@@ -57,7 +57,7 @@ To complement the T-SQL scripts, this project also includes an SSIS (SQL Server 
 
 📁 [View SSIS project](ssis/DataWarehouse_ETL)
 
-![SSIS Master Control Flow](docs/screenshots/ssis_master_control_flow.png)
+![SSIS Master Control Flow](docs/ssis_master_control_flow.png)
 
 ---
 
@@ -96,7 +96,7 @@ A 4-page Power BI report sits on top of the Gold layer for reporting and analysi
 
 📁 [View Power BI file](powerbi/sales_dashboard.pbix)
 
-![Sales Overview Dashboard](docs/screenshots/powerbi_sales_overview.png)
+![Sales Overview Dashboard](docs/powerbi_sales_overview.png)
 
 ---
 
