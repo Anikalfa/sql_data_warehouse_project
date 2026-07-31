@@ -1,0 +1,929 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="7/22/2026 3:38:44 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="BS-00978"
+  DTS:CreatorName="BS-00978\BS00978"
+  DTS:DTSID="{002BCAC1-2F1C-4373-A42C-29FEF2BA3E7A}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1016.0"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="Package1"
+  DTS:PackageType="5"
+  DTS:VersionBuild="8"
+  DTS:VersionGUID="{CCEDE4FA-8FF4-4047-9FE3-E4A329DAA057}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[BS-00978.DataWarehouse_Dev]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{3E22A1CE-288A-4CB3-9A3E-8D9AAA5BBC11}"
+      DTS:ObjectName="BS-00978.DataWarehouse_Dev">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=BS-00978;Initial Catalog=DataWarehouse_Dev;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Auto Translate=False;Application Name=SSIS-Package1-{3E22A1CE-288A-4CB3-9A3E-8D9AAA5BBC11}BS-00978.DataWarehouse_Dev;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Load Silver SalesDetails"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{A6E5FEA9-C07C-4EE4-9A6D-333C9E865143}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load Silver SalesDetails"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Load Silver SalesDetails\bronze crm_sales_details"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="bronze crm_sales_details"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT
+    sls_ord_num,
+    sls_prd_key,
+    TRY_CAST(sls_cust_id AS INT) AS sls_cust_id,
+
+    CASE 
+        WHEN TRY_CAST(sls_order_dt AS INT) = 0 OR LEN(TRY_CAST(sls_order_dt AS VARCHAR)) != 8 THEN NULL
+        ELSE TRY_CAST(CAST(TRY_CAST(sls_order_dt AS INT) AS VARCHAR) AS DATE)
+    END AS sls_order_dt,
+
+    CASE 
+        WHEN TRY_CAST(sls_ship_dt AS INT) = 0 OR LEN(TRY_CAST(sls_ship_dt AS VARCHAR)) != 8 THEN NULL
+        ELSE TRY_CAST(CAST(TRY_CAST(sls_ship_dt AS INT) AS VARCHAR) AS DATE)
+    END AS sls_ship_dt,
+
+    CASE 
+        WHEN TRY_CAST(sls_due_dt AS INT) = 0 OR LEN(TRY_CAST(sls_due_dt AS VARCHAR)) != 8 THEN NULL
+        ELSE TRY_CAST(CAST(TRY_CAST(sls_due_dt AS INT) AS VARCHAR) AS DATE)
+    END AS sls_due_dt,
+
+    TRY_CAST(sls_sales AS INT) AS sls_sales_raw,
+    TRY_CAST(sls_quantity AS INT) AS sls_quantity,
+    TRY_CAST(sls_price AS INT) AS sls_price_raw
+
+FROM bronze.crm_sales_details
+WHERE sls_ord_num IS NOT NULL;</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[BS-00978.DataWarehouse_Dev]"
+                  connectionManagerRefId="Package.ConnectionManagers[BS-00978.DataWarehouse_Dev]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_ord_num]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].ExternalColumns[sls_ord_num]"
+                      length="50"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_ord_num]"
+                      name="sls_ord_num"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_prd_key]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].ExternalColumns[sls_prd_key]"
+                      length="50"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_prd_key]"
+                      name="sls_prd_key"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_cust_id]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].ExternalColumns[sls_cust_id]"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_cust_id]"
+                      name="sls_cust_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_order_dt]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].ExternalColumns[sls_order_dt]"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_order_dt]"
+                      name="sls_order_dt"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_ship_dt]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].ExternalColumns[sls_ship_dt]"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_ship_dt]"
+                      name="sls_ship_dt"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_due_dt]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].ExternalColumns[sls_due_dt]"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_due_dt]"
+                      name="sls_due_dt"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_sales_raw]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].ExternalColumns[sls_sales_raw]"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_sales_raw]"
+                      name="sls_sales_raw"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_quantity]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].ExternalColumns[sls_quantity]"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_quantity]"
+                      name="sls_quantity"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_price_raw]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].ExternalColumns[sls_price_raw]"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_price_raw]"
+                      name="sls_price_raw"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].ExternalColumns[sls_ord_num]"
+                      dataType="wstr"
+                      length="50"
+                      name="sls_ord_num" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].ExternalColumns[sls_prd_key]"
+                      dataType="wstr"
+                      length="50"
+                      name="sls_prd_key" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].ExternalColumns[sls_cust_id]"
+                      dataType="i4"
+                      name="sls_cust_id" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].ExternalColumns[sls_order_dt]"
+                      dataType="dbDate"
+                      name="sls_order_dt" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].ExternalColumns[sls_ship_dt]"
+                      dataType="dbDate"
+                      name="sls_ship_dt" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].ExternalColumns[sls_due_dt]"
+                      dataType="dbDate"
+                      name="sls_due_dt" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].ExternalColumns[sls_sales_raw]"
+                      dataType="i4"
+                      name="sls_sales_raw" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].ExternalColumns[sls_quantity]"
+                      dataType="i4"
+                      name="sls_quantity" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].ExternalColumns[sls_price_raw]"
+                      dataType="i4"
+                      name="sls_price_raw" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[sls_ord_num]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[sls_ord_num]"
+                      name="sls_ord_num" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[sls_prd_key]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[sls_prd_key]"
+                      name="sls_prd_key" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[sls_cust_id]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[sls_cust_id]"
+                      name="sls_cust_id" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[sls_order_dt]"
+                      dataType="dbDate"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[sls_order_dt]"
+                      name="sls_order_dt" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[sls_ship_dt]"
+                      dataType="dbDate"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[sls_ship_dt]"
+                      name="sls_ship_dt" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[sls_due_dt]"
+                      dataType="dbDate"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[sls_due_dt]"
+                      name="sls_due_dt" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[sls_sales_raw]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[sls_sales_raw]"
+                      name="sls_sales_raw" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[sls_quantity]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[sls_quantity]"
+                      name="sls_quantity" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[sls_price_raw]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[sls_price_raw]"
+                      name="sls_price_raw" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Load Silver SalesDetails\Derive price"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="Derive price"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\Load Silver SalesDetails\Derive price.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Load Silver SalesDetails\Derive price.Inputs[Derived Column Input].Columns[sls_quantity]"
+                      cachedDataType="i4"
+                      cachedName="sls_quantity"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_quantity]" />
+                    <inputColumn
+                      refId="Package\Load Silver SalesDetails\Derive price.Inputs[Derived Column Input].Columns[sls_price_raw]"
+                      cachedDataType="i4"
+                      cachedName="sls_price_raw"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_price_raw]" />
+                    <inputColumn
+                      refId="Package\Load Silver SalesDetails\Derive price.Inputs[Derived Column Input].Columns[sls_sales_final]"
+                      cachedDataType="i4"
+                      cachedName="sls_sales_final"
+                      lineageId="Package\Load Silver SalesDetails\Derive sales.Outputs[Derived Column Output].Columns[sls_sales_final]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Load Silver SalesDetails\Derive price.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\Load Silver SalesDetails\Derive price.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\Derive price.Outputs[Derived Column Output].Columns[sls_price_final]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Load Silver SalesDetails\Derive price.Outputs[Derived Column Output].Columns[sls_price_final]"
+                      name="sls_price_final"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">([ISNULL](#{Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_price_raw]}) || #{Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_price_raw]} &lt;= 0) ? #{Package\Load Silver SalesDetails\Derive sales.Outputs[Derived Column Output].Columns[sls_sales_final]} / (#{Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_quantity]} == 0 ? NULL(DT_I4) : #{Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_quantity]}) : #{Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_price_raw]}</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(ISNULL(sls_price_raw) || sls_price_raw &lt;= 0) ? sls_sales_final / (sls_quantity == 0 ? NULL(DT_I4) : sls_quantity) : sls_price_raw</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load Silver SalesDetails\Derive price.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\Load Silver SalesDetails\Derive price.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\Derive price.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver SalesDetails\Derive price.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\Derive price.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver SalesDetails\Derive price.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Load Silver SalesDetails\Derive sales"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="Derive sales"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\Load Silver SalesDetails\Derive sales.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Load Silver SalesDetails\Derive sales.Inputs[Derived Column Input].Columns[sls_sales_raw]"
+                      cachedDataType="i4"
+                      cachedName="sls_sales_raw"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_sales_raw]" />
+                    <inputColumn
+                      refId="Package\Load Silver SalesDetails\Derive sales.Inputs[Derived Column Input].Columns[sls_quantity]"
+                      cachedDataType="i4"
+                      cachedName="sls_quantity"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_quantity]" />
+                    <inputColumn
+                      refId="Package\Load Silver SalesDetails\Derive sales.Inputs[Derived Column Input].Columns[sls_price_raw]"
+                      cachedDataType="i4"
+                      cachedName="sls_price_raw"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_price_raw]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Load Silver SalesDetails\Derive sales.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\Load Silver SalesDetails\Derive sales.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\Derive sales.Outputs[Derived Column Output].Columns[sls_sales_final]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Load Silver SalesDetails\Derive sales.Outputs[Derived Column Output].Columns[sls_sales_final]"
+                      name="sls_sales_final"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">([ISNULL](#{Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_sales_raw]}) || #{Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_sales_raw]} &lt;= 0 || #{Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_sales_raw]} != #{Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_quantity]} * [ABS](#{Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_price_raw]})) ? #{Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_quantity]} * [ABS](#{Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_price_raw]}) : #{Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_sales_raw]}</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(ISNULL(sls_sales_raw) || sls_sales_raw &lt;= 0 || sls_sales_raw != sls_quantity * ABS(sls_price_raw)) ? sls_quantity * ABS(sls_price_raw) : sls_sales_raw</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load Silver SalesDetails\Derive sales.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\Load Silver SalesDetails\Derive sales.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\Derive sales.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver SalesDetails\Derive sales.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\Derive sales.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver SalesDetails\Derive sales.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Destination - silver crm_sales_details"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[silver].[crm_sales_details]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[BS-00978.DataWarehouse_Dev]"
+                  connectionManagerRefId="Package.ConnectionManagers[BS-00978.DataWarehouse_Dev]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].Columns[sls_ord_num]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="sls_ord_num"
+                      externalMetadataColumnId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[sls_ord_num]"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_ord_num]" />
+                    <inputColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].Columns[sls_prd_key]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="sls_prd_key"
+                      externalMetadataColumnId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[sls_prd_key]"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_prd_key]" />
+                    <inputColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].Columns[sls_cust_id]"
+                      cachedDataType="i4"
+                      cachedName="sls_cust_id"
+                      externalMetadataColumnId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[sls_cust_id]"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_cust_id]" />
+                    <inputColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].Columns[sls_order_dt]"
+                      cachedDataType="dbDate"
+                      cachedName="sls_order_dt"
+                      externalMetadataColumnId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[sls_order_dt]"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_order_dt]" />
+                    <inputColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].Columns[sls_ship_dt]"
+                      cachedDataType="dbDate"
+                      cachedName="sls_ship_dt"
+                      externalMetadataColumnId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[sls_ship_dt]"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_ship_dt]" />
+                    <inputColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].Columns[sls_due_dt]"
+                      cachedDataType="dbDate"
+                      cachedName="sls_due_dt"
+                      externalMetadataColumnId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[sls_due_dt]"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_due_dt]" />
+                    <inputColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].Columns[sls_quantity]"
+                      cachedDataType="i4"
+                      cachedName="sls_quantity"
+                      externalMetadataColumnId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[sls_quantity]"
+                      lineageId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output].Columns[sls_quantity]" />
+                    <inputColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].Columns[sls_sales_final]"
+                      cachedDataType="i4"
+                      cachedName="sls_sales_final"
+                      externalMetadataColumnId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[sls_sales]"
+                      lineageId="Package\Load Silver SalesDetails\Derive sales.Outputs[Derived Column Output].Columns[sls_sales_final]" />
+                    <inputColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].Columns[sls_price_final]"
+                      cachedDataType="i4"
+                      cachedName="sls_price_final"
+                      externalMetadataColumnId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[sls_price]"
+                      lineageId="Package\Load Silver SalesDetails\Derive price.Outputs[Derived Column Output].Columns[sls_price_final]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[sls_ord_num]"
+                      dataType="wstr"
+                      length="50"
+                      name="sls_ord_num" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[sls_prd_key]"
+                      dataType="wstr"
+                      length="50"
+                      name="sls_prd_key" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[sls_cust_id]"
+                      dataType="i4"
+                      name="sls_cust_id" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[sls_order_dt]"
+                      dataType="dbDate"
+                      name="sls_order_dt" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[sls_ship_dt]"
+                      dataType="dbDate"
+                      name="sls_ship_dt" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[sls_due_dt]"
+                      dataType="dbDate"
+                      name="sls_due_dt" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[sls_sales]"
+                      dataType="i4"
+                      name="sls_sales" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[sls_quantity]"
+                      dataType="i4"
+                      name="sls_quantity" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[sls_price]"
+                      dataType="i4"
+                      name="sls_price" />
+                    <externalMetadataColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input].ExternalColumns[dwh_create_date]"
+                      dataType="dbTimeStamp2"
+                      name="dwh_create_date"
+                      scale="7" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Load Silver SalesDetails.Paths[Derived Column Output]"
+              endId="Package\Load Silver SalesDetails\Derive price.Inputs[Derived Column Input]"
+              name="Derived Column Output"
+              startId="Package\Load Silver SalesDetails\Derive sales.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\Load Silver SalesDetails.Paths[Derived Column Output1]"
+              endId="Package\Load Silver SalesDetails\Destination - silver crm_sales_details.Inputs[OLE DB Destination Input]"
+              name="Derived Column Output"
+              startId="Package\Load Silver SalesDetails\Derive price.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\Load Silver SalesDetails.Paths[OLE DB Source Output]"
+              endId="Package\Load Silver SalesDetails\Derive sales.Inputs[Derived Column Input]"
+              name="OLE DB Source Output"
+              startId="Package\Load Silver SalesDetails\bronze crm_sales_details.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Truncate silver_crm_sales_details"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{BDD77474-3570-4139-A858-B97BB89F9F17}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Truncate silver_crm_sales_details"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{3E22A1CE-288A-4CB3-9A3E-8D9AAA5BBC11}"
+          SQLTask:SqlStatementSource="TRUNCATE TABLE silver.crm_sales_details" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{8D2D3E6B-1652-4D56-B71A-CED96CAD5A36}"
+      DTS:From="Package\Truncate silver_crm_sales_details"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Load Silver SalesDetails" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="196,42.6666666666667"
+          Id="Package\Load Silver SalesDetails"
+          TopLeft="256.874988516793,115.631577677757" />
+        <NodeLayout
+          Size="241.333333333334,42.6666666666667"
+          Id="Package\Truncate silver_crm_sales_details"
+          TopLeft="239.999989271164,30.1052628273449" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="357.770822227312,72.7719294940115">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.859648183745"
+              Start="0,0"
+              End="0,35.359648183745">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.359648183745" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Load Silver SalesDetails">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="138,42.6666666666667"
+          Id="Package\Load Silver SalesDetails\Derive sales"
+          TopLeft="253.124988684431,94.4210515948544" />
+        <NodeLayout
+          Size="256,42.6666666666667"
+          Id="Package\Load Silver SalesDetails\Destination - silver crm_sales_details"
+          TopLeft="201.249991003424,258.842103475184" />
+        <NodeLayout
+          Size="136,42.6666666666667"
+          Id="Package\Load Silver SalesDetails\Derive price"
+          TopLeft="249.374988852069,168.421051023905" />
+        <NodeLayout
+          Size="200.666666666667,42.6666666666667"
+          Id="Package\Load Silver SalesDetails\bronze crm_sales_details"
+          TopLeft="214.999990388751,10.2631577820494" />
+        <EdgeLayout
+          Id="Package\Load Silver SalesDetails.Paths[Derived Column Output]"
+          TopLeft="319.74998876825,137.087718261521">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,31.3333327623838"
+              Start="0,0"
+              End="0,23.8333327623838">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.8333327623838" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Silver SalesDetails.Paths[OLE DB Source Output]"
+          TopLeft="318.729156203258,52.929824448716">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.4912271461383"
+              Start="0,0"
+              End="0,33.9912271461383">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.9912271461383" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Silver SalesDetails.Paths[Derived Column Output1]"
+          TopLeft="317.374988852069,211.087717690571">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="11.8750021513549,47.7543857846123"
+              Start="0,0"
+              End="11.8750021513549,40.2543857846123">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,19.8771928923061" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,19.8771928923061"
+                    Point2="0,23.8771928923061"
+                    Point3="4,23.8771928923061" />
+                  <mssgle:LineSegment
+                    End="7.87500215135492,23.8771928923061" />
+                  <mssgle:CubicBezierSegment
+                    Point1="7.87500215135492,23.8771928923061"
+                    Point2="11.8750021513549,23.8771928923061"
+                    Point3="11.8750021513549,27.8771928923061" />
+                  <mssgle:LineSegment
+                    End="11.8750021513549,40.2543857846123" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Silver SalesDetails\Destination - silver crm_sales_details">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Silver SalesDetails\bronze crm_sales_details">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
