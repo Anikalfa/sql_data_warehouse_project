@@ -67,7 +67,7 @@ The end-to-end load is automated using a SQL Server Agent job, so the warehouse 
 
 - **Job:** executes the master SSIS package (`master_load_all.dtsx`) to run the full Bronze → Silver load.
 - **Schedule:** *(add your schedule here — e.g. daily at 2:00 AM)*
-- **Job scripts:** the job definition is scripted out as `.sql` and version-controlled in [`sql_agent/job_scripts`](sql_agent/job_scripts), so the schedule and steps are reproducible from source control rather than only living inside SSMS.
+- **Job scripts:** the job definition is scripted out as `.sql` and version-controlled , so the schedule and steps are reproducible from source control rather than only living inside SSMS.
 
 ---
 
