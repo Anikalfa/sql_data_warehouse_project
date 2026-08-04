@@ -90,9 +90,9 @@ The reporting layer delivers detailed insights into three critical business pill
 A 4-page Power BI report sits on top of the Gold layer for reporting and analysis:
 
 1. **Sales Overview** — total orders, total units, total sales, and average order value (AOV) at a glance, plus sales & orders trend over time, sales distribution by country, and total sales by category.
-2. **Product Performance** — *(add a one-line summary of what this page shows)*
-3. **Customer Demographic Insights** — *(add a one-line summary of what this page shows)*
-4. **Supply Chain & Operational** — *(add a one-line summary of what this page shows)*
+2. **Product Performance** 
+3. **Customer Demographic Insights** 
+4. **Supply Chain & Operational** 
 
 📁 [View Power BI file](powerbi/sales_dashboard.pbix)
 
